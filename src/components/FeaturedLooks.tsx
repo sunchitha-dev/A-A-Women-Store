@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import catalog from '../data/catalog.json'
 import { useCart } from '../store/cart'
+import Reveal from './Reveal'
 
 type Look = { id: string; name: string; code: string }
 
@@ -85,8 +86,10 @@ export default function FeaturedLooks() {
   return (
     <section className="border-b-3 border-ink bg-cream px-4 py-16 sm:px-6">
       <div className="mx-auto max-w-6xl">
-        <p className="font-mono text-xs uppercase tracking-widest">Featured Looks</p>
-        <h2 className="mt-2 font-display text-4xl uppercase md:text-5xl">Pick Your Look</h2>
+        <Reveal>
+          <p className="font-mono text-xs uppercase tracking-widest">Featured Looks</p>
+          <h2 className="mt-2 font-display text-4xl uppercase md:text-5xl">Pick Your Look</h2>
+        </Reveal>
 
         <div className="mt-10 grid gap-10 md:grid-cols-2 md:items-start">
           <div>
@@ -139,7 +142,7 @@ export default function FeaturedLooks() {
           </div>
 
           <div>
-            <div className="grid grid-cols-2 gap-4 max-md:flex max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:pb-2">
+            <Reveal className="grid grid-cols-2 gap-4 max-md:flex max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:pb-2" stagger="> button" data-lenis-prevent-wheel>
               {LOOKS.map((look, i) => {
                 const active = look.id === selected
                 return (
@@ -175,7 +178,7 @@ export default function FeaturedLooks() {
                   </button>
                 )
               })}
-            </div>
+            </Reveal>
           </div>
         </div>
       </div>

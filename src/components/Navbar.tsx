@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useCartCount } from '../store/cart'
+import { startLenis, stopLenis } from '../lib/lenis'
 
 const links = [
+  { label: 'Home', to: '/', end: true },
   { label: 'Shop', to: '/shop' },
-  { label: 'Korean', to: '/shop' },
   { label: 'Tailoring', to: '/tailoring' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },
@@ -27,6 +28,13 @@ function Logo() {
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const count = useCartCount()
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    if (!open) return
+    stopLenis()
+    return () => startLenis()
+  }, [open])
 
   return (
     <>
@@ -35,17 +43,21 @@ export default function Navbar() {
           <Logo />
 
           <nav className="hidden md:flex items-center gap-6" aria-label="Main">
-            {links.map((l) => (
-              <NavLink
-                key={l.label}
-                to={l.to}
-                className={({ isActive }) =>
-                  `font-display text-sm uppercase hover:text-pink ${isActive ? 'text-pink' : 'text-ink'}`
-                }
-              >
-                {l.label}
-              </NavLink>
-            ))}
+            {links.map((l) => {
+              const active = l.to === '/shop' ? pathname.startsWith('/shop') || pathname.startsWith('/product') : undefined
+              return (
+                <NavLink
+                  key={l.label}
+                  to={l.to}
+                  end={l.end}
+                  className={({ isActive }) =>
+                    `font-display text-sm uppercase hover:text-pink ${(active ?? isActive) ? 'text-pink' : 'text-ink'}`
+                  }
+                >
+                  {l.label}
+                </NavLink>
+              )
+            })}
           </nav>
 
           <div className="flex items-center gap-3">
@@ -85,16 +97,19 @@ export default function Navbar() {
             </button>
           </div>
           <nav className="flex flex-1 flex-col justify-center gap-6 px-8" aria-label="Mobile">
-            {links.map((l) => (
-              <Link
-                key={l.label}
-                to={l.to}
-                className="font-display text-5xl uppercase hover:text-pink"
-                onClick={() => setOpen(false)}
-              >
-                {l.label}
-              </Link>
-            ))}
+            {links.map((l) => {
+              const active = l.to === '/shop' ? pathname.startsWith('/shop') || pathname.startsWith('/product') : l.end ? pathname === '/' : pathname.startsWith(l.to)
+              return (
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  className={`font-display text-5xl uppercase hover:text-pink ${active ? 'text-pink' : ''}`}
+                  onClick={() => setOpen(false)}
+                >
+                  {l.label}
+                </Link>
+              )
+            })}
           </nav>
         </div>
       )}
