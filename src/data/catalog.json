@@ -1,0 +1,9 @@
+[
+  { "id": "kurti_01", "name": "Floral Kurti", "code": "AA-KU-01" },
+  { "id": "kurti_04", "name": "Embroidered Kurti", "code": "AA-KU-04" },
+  { "id": "kurti_06", "name": "Printed Kurti", "code": "AA-KU-06" },
+  { "id": "jeans_01", "name": "Classic Denim", "code": "AA-JN-01" },
+  { "id": "jeans_02", "name": "High-Waist Denim", "code": "AA-JN-02" },
+  { "id": "party_11", "name": "Party Edit", "code": "AA-PT-11" },
+  { "id": "y2k_06", "name": "Y2K Street", "code": "AA-Y2-06" }
+]

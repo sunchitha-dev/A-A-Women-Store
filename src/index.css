@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cream text-ink font-body;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .nb-border {
+    @apply border-3 border-ink;
+  }
+
+  .nb-card {
+    @apply bg-white nb-border shadow-nb transition-all duration-150;
+  }
+
+  .nb-card:hover {
+    @apply -translate-x-0.5 -translate-y-0.5 shadow-nb-lg;
+  }
+
+  .nb-btn {
+    @apply inline-block font-display uppercase text-ink bg-gold nb-border shadow-nb
+      px-6 py-3 transition-all duration-150 cursor-pointer select-none;
+  }
+
+  .nb-btn:hover {
+    @apply translate-x-1 translate-y-1 shadow-nb-press;
+  }
+
+  .nb-btn:active {
+    @apply translate-x-1.5 translate-y-1.5 shadow-none;
+  }
+
+  .nb-btn-pink {
+    @apply bg-pink;
+  }
+
+  .nb-btn-ink {
+    @apply bg-ink text-cream;
+  }
+
+  .nb-input {
+    @apply nb-border bg-white px-4 py-3 text-ink font-body;
+  }
+
+  .nb-input:focus {
+    @apply outline-none;
+    outline: 3px solid #FF4D8D;
+    outline-offset: 2px;
+  }
+
+  .nb-sticker {
+    @apply inline-block font-display text-xs uppercase bg-pink nb-border px-2 py-1 text-ink;
+    transform: rotate(-3deg);
+  }
+
+  .nb-marquee {
+    @apply overflow-hidden border-y-3 border-ink bg-gold;
+  }
+
+  .nb-marquee-track {
+    @apply flex w-max;
+    animation: nb-marquee 20s linear infinite;
+  }
+
+  .nb-chip {
+    @apply inline-block rounded-none nb-border bg-white px-3 py-1 font-body text-sm cursor-pointer;
+  }
+
+  .nb-chip[data-active='true'] {
+    @apply bg-ink text-cream;
+  }
+}
+
+@keyframes nb-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
