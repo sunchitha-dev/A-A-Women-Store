@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
 import { tailoringConfig } from '../../data/tailoringConfig'
 import './TailorHero.css'
 
@@ -80,6 +81,7 @@ function Tape({ progress, vertical }: { progress: number; vertical: boolean }) {
 
 export default function TailorHero() {
   const sectionRef = useRef<HTMLElement>(null)
+  const wordsRef = useRef<HTMLSpanElement[]>([])
   const [progress, setProgress] = useState(0)
   const [reduced, setReduced] = useState(false)
   const prog = reduced ? 1 : progress
@@ -116,9 +118,23 @@ export default function TailorHero() {
     }
   }, [reduced])
 
+  useEffect(() => {
+    if (reduced) return
+    const words = wordsRef.current.filter(Boolean)
+    if (!words.length) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo(words, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out', clearProps: 'transform' })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [reduced])
+
   const book = () => {
     document.getElementById('book')?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' })
   }
+
+  const line1 = ['YOUR', 'SIZE.']
+  const line2 = ['YOUR', 'STYLE.']
+  let wi = 0
 
   return (
     <section ref={sectionRef} className="tailor-hero" aria-label="Custom tailoring">
@@ -130,8 +146,29 @@ export default function TailorHero() {
             </div>
             <p className="nb-sticker inline-block mb-4">Old Pallavaram</p>
             <h1 className="tailor-hero-h1">
-              <span className="tailor-hero-line1">YOUR SIZE.</span>
-              <span className="tailor-hero-line2">YOUR <br className="md:hidden" />STYLE.</span>
+              <span className="tailor-hero-line1">
+                {line1.map((w) => {
+                  const i = wi++
+                  return (
+                    <span key={i} ref={(el) => { if (el) wordsRef.current[i] = el }} className="mr-[0.25em] inline-block">
+                      {w}
+                    </span>
+                  )
+                })}
+              </span>
+              <span className="tailor-hero-line2">
+                {line2.map((w, j) => {
+                  const i = wi++
+                  return (
+                    <span key={i}>
+                      <span ref={(el) => { if (el) wordsRef.current[i] = el }} className="mr-[0.25em] inline-block">
+                        {w}
+                      </span>
+                      {j === 0 && <br className="md:hidden" />}
+                    </span>
+                  )
+                })}
+              </span>
             </h1>
             <div className="tailor-tape-wrap hidden md:block">
               <Tape progress={prog} vertical={false} />

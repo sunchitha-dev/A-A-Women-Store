@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Product } from '../../data/products'
 import { getDiscount } from '../../data/products'
+import { startLenis, stopLenis } from '../../lib/lenis'
 import { useCart } from '../../store/cart'
 import QuickView from './QuickView'
 
@@ -29,6 +30,12 @@ export default function ProductCard({ product, index }: Props) {
     b.src = back
   }, [side, back])
 
+  useEffect(() => {
+    if (!open) return
+    stopLenis()
+    return () => startLenis()
+  }, [open])
+
   const hViews = [0, sideOk ? 1 : 0, backOk ? 2 : 0].filter((v, i) => i === 0 || v !== 0) as number[]
   useEffect(() => {
     if (!hover || hViews.length < 2) return
@@ -46,8 +53,8 @@ export default function ProductCard({ product, index }: Props) {
         onMouseEnter={() => { setHover(true); setHoverView(0) }}
         onMouseLeave={() => setHover(false)}
       >
-        <span className="nb-sticker absolute left-3 top-3 z-10">SAVE {off}%</span>
-        <img
+        <span data-card-sticker className="nb-sticker absolute left-3 top-3 z-10">SAVE {off}%</span>
+        <img data-card-img
           src={product.image}
           alt={product.name}
           loading="lazy"
@@ -59,7 +66,7 @@ export default function ProductCard({ product, index }: Props) {
           }}
         />
         {sideOk && (
-          <img
+          <img data-card-img
             src={side}
             alt=""
             aria-hidden="true"
@@ -69,7 +76,7 @@ export default function ProductCard({ product, index }: Props) {
           />
         )}
         {backOk && (
-          <img
+          <img data-card-img
             src={back}
             alt=""
             aria-hidden="true"
@@ -83,7 +90,7 @@ export default function ProductCard({ product, index }: Props) {
       <div className="space-y-2 p-4">
         <h3 className="font-display text-lg uppercase leading-tight">{product.name}</h3>
         <p className="font-mono text-xs uppercase">{product.code}</p>
-        <div className="flex items-baseline gap-2">
+        <div data-card-price className="flex items-baseline gap-2">
           <span className="font-mono text-base font-bold">₹{product.price}</span>
           <span className="font-mono text-sm line-through opacity-60">₹{product.mrp}</span>
         </div>

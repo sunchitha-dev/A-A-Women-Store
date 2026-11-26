@@ -21,7 +21,7 @@ type Props = {
 
 export default function ShopToolbar({ cols, cat, sort, onCols, onCat, onSort }: Props) {
   return (
-    <div className="sticky top-16 z-30 border-b-3 border-ink bg-cream">
+    <div className="sticky top-0 z-30 border-b-3 border-ink bg-cream">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <div className="hidden gap-2 md:flex" role="group" aria-label="Grid columns">

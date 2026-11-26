@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { aboutConfig } from '../../data/aboutConfig'
 import Reveal from '../Reveal'
+import SplitWords from '../motion/SplitWords'
+import Parallax from '../motion/Parallax'
 
 const BGS = ['bg-pink', 'bg-lilac', 'bg-gold', 'bg-cream', 'bg-white', 'bg-pink']
 
@@ -31,8 +33,10 @@ export default function WhatWeSell() {
       <div className="px-4 py-16 sm:px-6 md:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-center gap-4">
-            <h2 className="font-display text-4xl uppercase text-ink md:text-6xl">WHAT WE SELL</h2>
-            <Img src="/about/rail.webp" alt="" className="w-16 -rotate-[4deg] md:w-20" />
+            <SplitWords as="h2" className="font-display text-4xl uppercase text-ink md:text-6xl">WHAT WE SELL</SplitWords>
+            <Parallax speed={0.12} className="w-16 md:w-20">
+              <Img src="/about/rail.webp" alt="" className="w-full -rotate-[4deg]" />
+            </Parallax>
           </div>
 
           <Reveal stagger=":scope > a" className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

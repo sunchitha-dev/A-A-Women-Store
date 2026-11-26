@@ -92,7 +92,7 @@ export default function AboutHero() {
       }}
       aria-label="About A and A Women Store"
     >
-      <div className="mx-auto grid min-h-[100svh] max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 md:grid-cols-2 md:py-24">
+      <div className="mx-auto grid min-h-[100svh] max-w-6xl items-center gap-20 px-4 py-20 sm:px-6 md:grid-cols-2 md:gap-10 md:py-24">
         <div className="relative z-10">
           <h1 className="font-display uppercase leading-[0.92] [font-size:clamp(3rem,9vw,9rem)]">
             <span className="block text-ink">
@@ -129,7 +129,7 @@ export default function AboutHero() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[520px] md:justify-self-end">
+        <div className="relative mx-auto mt-4 w-full max-w-[520px] md:mt-0 md:justify-self-end">
           <div aria-hidden="true" className="absolute -bottom-4 -right-4 h-[88%] w-[88%] bg-pink border-3 border-ink" />
           <div
             ref={polaroidRef}

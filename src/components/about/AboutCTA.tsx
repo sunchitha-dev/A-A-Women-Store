@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { aboutConfig } from '../../data/aboutConfig'
 import Reveal from '../Reveal'
+import SplitWords from '../motion/SplitWords'
 
 function Img({ src, alt = '', className = '' }: { src: string; alt?: string; className?: string }) {
   const [bad, setBad] = useState(false)
@@ -18,7 +19,7 @@ export default function AboutCTA() {
         <Img src="/about/hanger-gold.webp" alt="" className="pointer-events-none absolute left-1/2 top-0 w-10 -translate-x-1/2 md:w-14" />
 
         <div className="relative px-4 py-8 text-center md:py-10">
-          <h2 className="font-display text-4xl uppercase text-gold md:text-7xl">COME SAY HI.</h2>
+          <SplitWords as="h2" mode="chars" stagger={0.03} className="font-display text-4xl uppercase text-gold md:text-7xl">COME SAY HI.</SplitWords>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a href={`https://wa.me/${aboutConfig.whatsapp}`} target="_blank" rel="noreferrer" className="nb-btn nb-btn-pink">WHATSAPP US</a>
             <a href={`https://www.google.com/maps/search/?api=1&query=${mapQ}`} target="_blank" rel="noreferrer" className="nb-btn bg-gold">DIRECTIONS</a>

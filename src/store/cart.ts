@@ -18,6 +18,7 @@ type CartState = {
   add: (id: string, size?: string, qty?: number, meta?: Omit<CartItem, 'id' | 'size' | 'qty'>) => void
   remove: (id: string, size?: string) => void
   setQty: (id: string, size: string | undefined, qty: number) => void
+  setSize: (id: string, oldSize: string | undefined, newSize: string) => void
   clear: () => void
   openDrawer: () => void
   closeDrawer: () => void
@@ -49,6 +50,19 @@ export const useCart = create<CartState>()(
               ? s.items.filter((i) => key(i.id, i.size) !== key(id, size))
               : s.items.map((i) => (key(i.id, i.size) === key(id, size) ? { ...i, qty } : i)),
         })),
+      setSize: (id, oldSize, newSize) =>
+        set((s) => {
+          if (oldSize === newSize) return s
+          const fromK = key(id, oldSize)
+          const toK = key(id, newSize)
+          const from = s.items.find((i) => key(i.id, i.size) === fromK)
+          if (!from) return s
+          const to = s.items.find((i) => key(i.id, i.size) === toK)
+          if (to) {
+            return { items: s.items.filter((i) => key(i.id, i.size) !== fromK).map((i) => (key(i.id, i.size) === toK ? { ...i, qty: i.qty + from.qty } : i)) }
+          }
+          return { items: s.items.map((i) => (key(i.id, i.size) === fromK ? { ...i, size: newSize } : i)) }
+        }),
       clear: () => set({ items: [] }),
       openDrawer: () => set({ drawerOpen: true }),
       closeDrawer: () => set({ drawerOpen: false }),

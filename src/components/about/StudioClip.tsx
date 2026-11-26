@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Reveal from '../Reveal'
+import SplitWords from '../motion/SplitWords'
 
 function Img({ src, alt = '', className = '' }: { src: string; alt?: string; className?: string }) {
   const [bad, setBad] = useState(false)
@@ -38,9 +39,7 @@ export default function StudioClip() {
   return (
     <section className="border-b-3 border-ink bg-cream px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-6xl">
-        <Reveal>
-          <h2 className="font-display text-4xl uppercase text-ink md:text-6xl">Inside The Store</h2>
-        </Reveal>
+        <SplitWords as="h2" className="font-display text-4xl uppercase text-ink md:text-6xl">Inside The Store</SplitWords>
 
         <div className="mt-10 grid items-center gap-10 md:grid-cols-[minmax(0,560px)_1fr]">
           <Reveal className="relative mx-auto w-full max-w-[560px]">

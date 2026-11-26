@@ -1,54 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { aboutConfig } from '../../data/aboutConfig'
-
-type Hours = { monFri: string; satSun: string }
-
-function parseRange(range: string) {
-  const [a, b] = range.split('-')
-  const [ah, am] = a.split(':').map(Number)
-  const [bh, bm] = b.split(':').map(Number)
-  return { open: ah * 60 + am, close: bh * 60 + bm }
-}
-
-function fmtTime(mins: number) {
-  const h24 = Math.floor(mins / 60) % 24
-  const m = mins % 60
-  const ap = h24 >= 12 ? 'PM' : 'AM'
-  const h12 = h24 % 12 || 12
-  return `${h12}:${String(m).padStart(2, '0')} ${ap}`
-}
-
-function getKolkataParts(d: Date) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Kolkata', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false,
-  }).formatToParts(d)
-  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? ''
-  const day = get('weekday') // Mon Tue ...
-  const hour = Number(get('hour'))
-  const minute = Number(get('minute'))
-  return { day, mins: (hour === 24 ? 0 : hour) * 60 + minute }
-}
-
-export function getVisitStatus(now: Date, hours: Hours) {
-  const { day, mins } = getKolkataParts(now)
-  const weekend = day === 'Sat' || day === 'Sun'
-  const range = parseRange(weekend ? hours.satSun : hours.monFri)
-  if (mins >= range.open && mins < range.close) {
-    return { open: true, label: 'OPEN NOW', detail: `Closes ${fmtTime(range.close)}` }
-  }
-  let next = ''
-  if (mins < range.open) {
-    next = `Opens today ${fmtTime(range.open)}`
-  } else {
-    const dayOrder = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const idx = dayOrder.indexOf(day)
-    const nextDay = dayOrder[(idx + 1) % 7]
-    const nextWeekend = nextDay === 'Sat' || nextDay === 'Sun'
-    const nextRange = parseRange(nextWeekend ? hours.satSun : hours.monFri)
-    next = `Opens ${nextDay} ${fmtTime(nextRange.open)}`
-  }
-  return { open: false, label: 'CLOSED', detail: next }
-}
+import { getVisitStatus } from '../../lib/openNow'
+import SplitWords from '../motion/SplitWords'
 
 function Img({ src, alt = '', className = '' }: { src: string; alt?: string; className?: string }) {
   const [bad, setBad] = useState(false)
@@ -58,7 +11,12 @@ function Img({ src, alt = '', className = '' }: { src: string; alt?: string; cla
 
 export default function VisitUs() {
   const { address, landmark, phone, whatsapp, payments, delivery, hours } = aboutConfig
-  const status = useMemo(() => getVisitStatus(new Date(), hours), [hours])
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60000)
+    return () => clearInterval(id)
+  }, [])
+  const status = useMemo(() => getVisitStatus(now, hours), [now, hours])
   const mapQ = encodeURIComponent(address)
   const mapSrc = `https://www.google.com/maps?q=${mapQ}&output=embed`
   const dirSrc = `https://www.google.com/maps/search/?api=1&query=${mapQ}`
@@ -66,7 +24,7 @@ export default function VisitUs() {
   return (
     <section id="visit" className="border-b-3 border-ink bg-cream px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-6xl">
-        <h2 className="font-display text-4xl uppercase text-ink md:text-6xl">Visit Us</h2>
+        <SplitWords as="h2" className="font-display text-4xl uppercase text-ink md:text-6xl">Visit Us</SplitWords>
 
         <div className="mt-10 grid gap-8 md:grid-cols-2">
           <div className="space-y-6">

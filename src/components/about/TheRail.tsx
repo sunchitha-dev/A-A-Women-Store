@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import catalog from '../../data/catalog.json'
+import SplitWords from '../motion/SplitWords'
 
 const LOOKS = ['kurti_01', 'kurti_04', 'kurti_06', 'jeans_01', 'jeans_02', 'party_11', 'y2k_06']
 const LOOKUP = Object.fromEntries((catalog as { id: string; name: string; code: string }[]).map((c) => [c.id, c]))
@@ -126,7 +127,7 @@ export default function TheRail() {
       <div className={reduced ? '' : 'md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:overflow-hidden'}>
         <div className="px-4 pt-10 sm:px-6 md:px-10">
           <div className="flex flex-wrap items-center gap-4">
-            <h2 className="font-display text-4xl uppercase text-ink md:text-6xl">THE RAIL</h2>
+            <SplitWords as="h2" className="font-display text-4xl uppercase text-ink md:text-6xl">THE RAIL</SplitWords>
             <span className="nb-sticker" style={{ background: '#D4AF55', transform: 'rotate(-4deg)' }}>FRESH LOOKS</span>
           </div>
         </div>

@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import catalog from '../data/catalog.json'
 import { useCart } from '../store/cart'
 import Reveal from './Reveal'
+import SplitWords from './motion/SplitWords'
 
 type Look = { id: string; name: string; code: string }
 
@@ -88,8 +89,8 @@ export default function FeaturedLooks() {
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <p className="font-mono text-xs uppercase tracking-widest">Featured Looks</p>
-          <h2 className="mt-2 font-display text-4xl uppercase md:text-5xl">Pick Your Look</h2>
         </Reveal>
+        <SplitWords as="h2" className="mt-2 font-display text-4xl uppercase md:text-5xl">Pick Your Look</SplitWords>
 
         <div className="mt-10 grid gap-10 md:grid-cols-2 md:items-start">
           <div>
