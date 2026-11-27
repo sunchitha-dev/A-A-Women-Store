@@ -93,17 +93,18 @@
 .tailor-sticker-c { top: 45%; left: 0%; transform: rotate(-4deg); }
 
 @media (max-width: 768px) {
-  .tailor-hero { height: 100vh; }
-  .tailor-hero-sticky { top: 4rem; height: calc(100vh - 4rem); }
-  .tailor-hero-grid { grid-template-columns: 1fr; gap: 1rem; padding: 1.25rem 1rem 1.25rem 4.5rem; align-content: start; }
-  .tailor-hero-h1 { font-size: clamp(2.8rem, 14vw, 4.5rem); }
-  .tailor-hero-sub { font-size: 22px; max-width: 100%; }
-  .tailor-hero-right { min-height: 240px; height: 38vh; margin-left: -3.5rem; }
-  .tailor-dressform { height: min(85%, 320px); }
-  .tailor-prop-chalk { display: none; }
-  .tailor-tape-wrap { max-width: 52px; position: absolute; left: -3.5rem; top: 0; bottom: 0; margin: 0; }
+  .tailor-hero { height: auto; min-height: calc(100svh - 4rem); }
+  .tailor-hero-sticky { position: relative; top: 0; height: auto; min-height: calc(100svh - 4rem); overflow: hidden; }
+  .tailor-hero-grid { grid-template-columns: 1fr; gap: 0.5rem; padding: 1rem 1rem 1.5rem 3.5rem; align-content: start; }
+  .tailor-hero-h1 { font-size: clamp(2.6rem, 13vw, 4rem); }
+  .tailor-hero-sub { font-size: 20px; max-width: 100%; margin-top: 0.75rem; }
+  .tailor-hero-btns { margin-top: 1rem; }
+  .tailor-hero-right { min-height: 220px; height: 34svh; margin-left: 0; margin-top: 0; }
+  .tailor-dressform { height: min(82%, 280px); bottom: 8%; }
+  .tailor-prop { display: none; }
+  .tailor-tape-wrap { max-width: 40px; position: absolute; left: -2.75rem; top: 0; bottom: 0; margin: 0; }
   .tailor-tape-svg-h { display: none; }
-  .tailor-tape-svg-v { display: block; height: 100%; width: 52px; }
+  .tailor-tape-svg-v { display: block; height: 100%; width: 40px; }
 }
 
 @media (min-width: 769px) {

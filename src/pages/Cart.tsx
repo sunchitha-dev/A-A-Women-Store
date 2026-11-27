@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useCart, type CartItem as Item } from '../store/cart'
@@ -8,9 +9,8 @@ import SplitWords from '../components/motion/SplitWords'
 import Parallax from '../components/motion/Parallax'
 import CartItemCard from '../components/cart/CartItem'
 import Receipt from '../components/cart/Receipt'
-import EmptyBag from '../components/cart/EmptyBag'
-import Suggestions from '../components/cart/Suggestions'
-import { startLenis, stopLenis } from '../lib/lenis'
+import CartCTA from '../components/cart/CartCTA'
+
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,10 +19,36 @@ const priceMap = Object.fromEntries(products.map((p) => [p.id, p.price]))
 
 type Toast = { item: Item; index: number }
 
+function OrderNote() {
+  const [note, setNote] = useState('')
+  const send = () => {
+    const text = note.trim()
+    if (!text) return
+    window.open(`https://wa.me/917904733345?text=${encodeURIComponent(`ORDER NOTE:\n${text}`)}`, '_blank', 'noopener')
+  }
+  return (
+    <section className="mt-12">
+      <SplitWords as="h2" className="font-display text-3xl uppercase md:text-4xl">ORDER NOTE</SplitWords>
+      <div className="nb-card mt-6 bg-cream p-4 sm:p-6">
+        <label htmlFor="order-note" className="font-mono text-xs uppercase tracking-widest text-ink">Add a note for your order</label>
+        <textarea
+          id="order-note"
+          className="nb-input mt-3 min-h-32 w-full resize-y bg-white font-mono text-sm"
+          placeholder="Size, fit, delivery, or any request..."
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button type="button" className="nb-btn nb-btn-pink" onClick={send} disabled={!note.trim()}>SEND NOTE</button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function Cart() {
   const items = useCart((s) => s.items)
   const [toast, setToast] = useState<Toast | null>(null)
-  const [sheet, setSheet] = useState(false)
   const timerRef = useRef<number | null>(null)
   const count = items.reduce((n, i) => n + i.qty, 0)
   const subtotal = items.reduce((s, i) => s + (i.price ?? priceMap[i.id] ?? 0) * i.qty, 0)
@@ -37,14 +63,6 @@ export default function Cart() {
 
 
   useEffect(() => () => { if (timerRef.current) window.clearTimeout(timerRef.current) }, [])
-
-  useEffect(() => {
-    if (!sheet) return
-    stopLenis()
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSheet(false) }
-    document.addEventListener('keydown', onKey)
-    return () => { startLenis(); document.removeEventListener('keydown', onKey) }
-  }, [sheet])
 
   const marqueeText = useMemo(() => {
     const pay = aboutConfig.payments.map((p) => p.replace(' / NFC mobile payments', ' / UPI')).join(' ✦ ')
@@ -74,15 +92,37 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="bg-cream min-h-[60vh]">
-        <EmptyBag />
-        <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6"><Suggestions /></div>
+      <div className="bg-cream" style={{ backgroundImage: 'linear-gradient(rgba(10,10,10,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(10,10,10,0.08) 1px, transparent 1px)', backgroundSize: '40px 40px', overflowX: 'clip' }}>
+        <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
+          <div className="relative">
+            <SplitWords as="h1" className="font-display uppercase [font-size:clamp(3rem,9vw,8rem)] leading-[0.9]">YOUR BAG</SplitWords>
+            <span data-bag-count className="nb-sticker inline-block mt-4" style={{ background: '#FF4D8D', transform: 'rotate(-4deg)' }}>0 ITEMS</span>
+          </div>
+        </div>
+        <div className="mt-8 nb-marquee bg-gold border-y-[3px] border-ink" aria-label="Store info">
+          <div className="nb-marquee-track">
+            {Array.from({ length: 8 }).map((_, i) => <span key={i} className="px-6 py-3 font-mono text-xs uppercase text-ink">{marqueeText}</span>)}
+          </div>
+        </div>
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:gap-16 lg:grid-cols-[1fr_360px]">
+            <div className="min-w-0" />
+            <div className="lg:block">
+              <div className="nb-card bg-cream p-8 text-center">
+                <img src="/about-media/bags.webp" alt="" aria-hidden="true" className="mx-auto w-28 md:w-36" onError={(e) => { e.currentTarget.style.display = 'none' }} />
+                <p className="mt-6 font-display text-3xl uppercase md:text-4xl">YOUR BAG IS EMPTY</p>
+                <Link to="/shop" className="nb-btn bg-gold mt-6 inline-flex">SHOP LOOKS</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        <CartCTA />
       </div>
     )
   }
 
   return (
-    <div className="bg-cream" style={{ backgroundImage: 'linear-gradient(rgba(10,10,10,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(10,10,10,0.08) 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+    <div className="bg-cream" style={{ backgroundImage: 'linear-gradient(rgba(10,10,10,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(10,10,10,0.08) 1px, transparent 1px)', backgroundSize: '40px 40px', overflowX: 'clip' }}>
       <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
         <div className="relative">
           <img src="/about-media/gift-box.webp" alt="" aria-hidden="true" className="absolute -top-2 right-16 hidden w-16 md:block" onError={(e) => { e.currentTarget.style.display = 'none' }} />
@@ -114,35 +154,23 @@ export default function Cart() {
                 <CartItemCard key={`${item.id}::${item.size ?? ''}`} item={item} index={i} onRemove={onRemove} />
               ))}
             </ul>
-            <Suggestions />
+            <OrderNote />
           </div>
 
-          <div className="hidden lg:block">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto overflow-x-hidden overscroll-contain" data-lenis-prevent>
+          <div id="receipt" className="lg:block">
+            <div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overflow-x-hidden lg:overscroll-contain" data-lenis-prevent>
               <Receipt items={items} subtotal={subtotal} />
             </div>
           </div>
         </div>
       </div>
+      <CartCTA />
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t-[3px] border-ink bg-cream p-4 flex items-center justify-between gap-4">
         <p className="font-mono text-sm font-bold uppercase">TOTAL Rs.{subtotal.toLocaleString('en-IN')}</p>
-        <button type="button" className="nb-btn nb-btn-pink" onClick={() => setSheet(true)}>PLACE ORDER</button>
+        <button type="button" className="nb-btn nb-btn-pink" onClick={() => document.getElementById('receipt')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>PLACE ORDER</button>
       </div>
-      <div className="lg:hidden h-24" />
-
-      {sheet && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <button type="button" className="absolute inset-0 bg-ink/40" aria-label="Close receipt" onClick={() => setSheet(false)} />
-          <div className="absolute inset-x-0 bottom-0 max-h-[92vh] overflow-y-auto bg-cream border-t-[4px] border-ink p-4 pb-8" data-lenis-prevent>
-            <div className="flex justify-between items-center mb-4">
-              <p className="font-display text-xl uppercase">Receipt</p>
-              <button type="button" className="nb-btn nb-btn-ink !px-3 !py-1" onClick={() => setSheet(false)} aria-label="Close">X</button>
-            </div>
-            <Receipt items={items} subtotal={subtotal} compact />
-          </div>
-        </div>
-      )}
+      <div className="lg:hidden h-24 bg-ink" />
 
       {toast && (
         <div className="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink text-cream border-[3px] border-ink px-5 py-3 font-mono text-sm uppercase flex items-center gap-4 shadow-nb">

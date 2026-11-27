@@ -9,9 +9,11 @@ type Opts = {
   y?: number
   stagger?: string
   once?: boolean
+  duration?: number
+  staggerEach?: number
 }
 
-export function useReveal(ref: RefObject<HTMLElement | null>, { delay = 0, y = 40, stagger, once = true }: Opts = {}) {
+export function useReveal(ref: RefObject<HTMLElement | null>, { delay = 0, y = 40, stagger, once = true, duration = 1.1, staggerEach = 0.14 }: Opts = {}) {
   const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
 
   useLayoutEffect(() => {
@@ -24,14 +26,14 @@ export function useReveal(ref: RefObject<HTMLElement | null>, { delay = 0, y = 4
   useLayoutEffect(() => {
     const el = ref.current
     if (!el || reduced) return
+    const sel = stagger?.startsWith('>') ? `:scope ${stagger}` : stagger
+    const targets = sel ? Array.from(el.querySelectorAll<HTMLElement>(sel)) : [el]
+    const shadows = targets.map((t) => {
+      if (!t.classList.contains('nb-card')) return ''
+      const s = getComputedStyle(t).boxShadow
+      return s && s !== 'none' ? s : '6px 6px 0 0 #0A0A0A'
+    })
     const ctx = gsap.context(() => {
-      const sel = stagger?.startsWith('>') ? `:scope ${stagger}` : stagger
-      const targets = sel ? Array.from(el.querySelectorAll<HTMLElement>(sel)) : [el]
-      const shadows = targets.map((t) => {
-        if (!t.classList.contains('nb-card')) return ''
-        const s = getComputedStyle(t).boxShadow
-        return s && s !== 'none' ? s : '6px 6px 0 0 #0A0A0A'
-      })
       targets.forEach((t, i) => {
         if (shadows[i]) gsap.set(t, { boxShadow: '0 0 0 0 #0A0A0A' })
       })
@@ -41,12 +43,12 @@ export function useReveal(ref: RefObject<HTMLElement | null>, { delay = 0, y = 4
         {
           opacity: 1,
           y: 0,
-          duration: 0.7,
+          duration,
           ease: 'power3.out',
           delay,
           stagger: stagger
             ? {
-                each: 0.08,
+                each: staggerEach,
                 onStart(this: gsap.core.Tween) {
                   const t = (this.targets()[0] as HTMLElement)
                   const i = targets.indexOf(t)
@@ -57,7 +59,7 @@ export function useReveal(ref: RefObject<HTMLElement | null>, { delay = 0, y = 4
               }
             : 0,
           clearProps: 'transform,boxShadow',
-          scrollTrigger: { trigger: el, start: 'top 85%', once },
+          scrollTrigger: { trigger: el, start: 'top 92%', once, invalidateOnRefresh: true },
           onStart: stagger
             ? undefined
             : () => {
@@ -67,8 +69,20 @@ export function useReveal(ref: RefObject<HTMLElement | null>, { delay = 0, y = 4
         },
       )
     }, el)
-    return () => ctx.revert()
-  }, [ref, delay, y, stagger, once, reduced])
+    const raf = requestAnimationFrame(() => ScrollTrigger.refresh())
+    const t = setTimeout(() => ScrollTrigger.refresh(), 250)
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return
+      targets.forEach((target, i) => {
+        if (getComputedStyle(target).opacity !== '0') return
+        gsap.to(target, { opacity: 1, y: 0, duration, ease: 'power3.out', delay: delay + i * staggerEach, overwrite: 'auto', clearProps: 'transform,boxShadow' })
+        if (shadows[i]) gsap.to(target, { boxShadow: shadows[i], duration: 0.4, ease: 'power3.out', delay: delay + i * staggerEach, overwrite: 'auto' })
+      })
+      io.disconnect()
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' })
+    io.observe(el)
+    return () => { cancelAnimationFrame(raf); clearTimeout(t); io.disconnect(); ctx.revert() }
+  }, [ref, delay, y, stagger, once, duration, staggerEach, reduced])
 
   return reduced
 }

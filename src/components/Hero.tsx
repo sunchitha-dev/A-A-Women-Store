@@ -47,6 +47,7 @@ export default function Hero() {
   const [loaded, setLoaded] = useState(0)
   const [ready, setReady] = useState(false)
   const [reduced, setReduced] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   // Preload every frame before the hero shows anything but the LOADING box.
   useEffect(() => {
@@ -78,6 +79,13 @@ export default function Hero() {
     sync()
     mq.addEventListener('change', sync)
     return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  useEffect(() => {
+    const sync = () => setIsMobile(window.innerWidth < 768)
+    sync()
+    window.addEventListener('resize', sync)
+    return () => window.removeEventListener('resize', sync)
   }, [])
 
   const draw = (idx: number) => {
@@ -134,7 +142,7 @@ export default function Hero() {
 
   useEffect(() => {
     if (!ready) return
-    if (reduced) {
+    if (reduced || isMobile) {
       apply(0, true)
       return
     }
@@ -154,17 +162,17 @@ export default function Hero() {
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
     // apply closes over refs and constants only, so the loop need not restart on it
-  }, [ready, reduced])
+  }, [ready, reduced, isMobile])
 
   return (
     <section
       ref={sectionRef}
       aria-label="Elevate your wardrobe"
-      className={reduced ? 'relative' : 'h-[200vh] md:h-[350vh]'}
+      className={reduced || isMobile ? 'relative' : 'h-[200vh] md:h-[350vh]'}
     >
       <div
         className={
-          reduced
+          reduced || isMobile
             ? 'relative min-h-[calc(100vh-4rem)] overflow-hidden border-b-3 border-ink'
             : 'sticky top-16 h-[calc(100vh-4rem)] overflow-hidden border-b-3 border-ink'
         }
@@ -179,21 +187,21 @@ export default function Hero() {
           }}
         />
 
-        <div className="relative z-10 mx-auto flex h-full min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-center gap-5 px-4 py-6 md:flex-row md:items-center md:gap-10 md:px-6 md:py-0">
-          <div className="flex w-full flex-col items-start gap-4 md:w-[46%] md:gap-6">
+        <div className="relative z-10 mx-auto flex h-full max-w-6xl flex-col justify-evenly gap-3 px-4 py-3 md:flex-row md:items-center md:justify-center md:gap-10 md:px-6 md:py-0">
+          <div className="flex w-full flex-col items-start gap-3 md:w-[46%] md:gap-6">
             <span
               ref={badgeRef}
-              className="inline-block origin-left border-3 border-ink bg-pink px-3 py-1.5 font-mono text-[10px] uppercase shadow-nb-sm md:text-xs"
+              className="inline-block origin-left border-3 border-ink bg-pink px-3 py-1 font-mono text-[10px] uppercase shadow-nb-sm md:text-xs"
             >
               A &amp; A Women Store • Old Pallavaram
             </span>
             <h1
               ref={headlineRef}
-              className="font-display text-5xl uppercase leading-[0.95] md:text-7xl"
+              className="font-display text-4xl uppercase leading-[0.95] sm:text-5xl md:text-7xl"
             >
               Elevate Your Wardrobe
             </h1>
-            <div ref={btnsRef} className="flex flex-wrap gap-3">
+            <div ref={btnsRef} className="flex flex-wrap gap-2 md:gap-3">
               <Link to="/shop" className="nb-btn bg-gold">
                 Shop Now
               </Link>
@@ -232,7 +240,7 @@ export default function Hero() {
                   A &amp; A • NEW STOCK
                 </span>
               </div>
-              <div className="relative h-[38vh] min-h-[260px] overflow-hidden bg-lilac md:h-[54vh]">
+              <div className="relative h-[32vh] min-h-[200px] max-h-[280px] overflow-hidden bg-lilac md:h-[54vh] md:max-h-none">
                 <div className="absolute bottom-1 left-1/2 z-0 h-7 w-[62%] -translate-x-1/2 rounded-full border-[3px] border-ink bg-gold shadow-[6px_6px_0_0_#0A0A0A]" />
                 <canvas
                   ref={canvasRef}

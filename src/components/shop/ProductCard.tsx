@@ -12,7 +12,6 @@ type Props = { product: Product; index: number }
 export default function ProductCard({ product, index }: Props) {
   const add = useCart((s) => s.add)
   const [open, setOpen] = useState(false)
-  const [hover, setHover] = useState(false)
   const [sideOk, setSideOk] = useState(true)
   const [backOk, setBackOk] = useState(true)
   const [hoverView, setHoverView] = useState(0)
@@ -37,23 +36,40 @@ export default function ProductCard({ product, index }: Props) {
   }, [open])
 
   const hViews = [0, sideOk ? 1 : 0, backOk ? 2 : 0].filter((v, i) => i === 0 || v !== 0) as number[]
-  useEffect(() => {
-    if (!hover || hViews.length < 2) return
-    let i = Math.max(0, hViews.indexOf(hoverView))
-    const id = setInterval(() => { i = (i + 1) % hViews.length; setHoverView(hViews[i]) }, 900)
-    return () => clearInterval(id)
-  }, [hover, sideOk, backOk, hoverView]) // eslint-disable-line react-hooks/exhaustive-deps
+  const cycleRef = useRef<number[]>([])
+  const hoverTimer = useRef<number | null>(null)
+  useEffect(() => () => { cycleRef.current.forEach(clearTimeout); if (hoverTimer.current) clearTimeout(hoverTimer.current) }, [])
+  const runCycle = () => {
+    if (hViews.length < 2) return
+    cycleRef.current.forEach(clearTimeout)
+    const seq = [...hViews.filter((v) => v !== 0), 0]
+    seq.forEach((v, i) => {
+      cycleRef.current.push(window.setTimeout(() => setHoverView(v), (i + 1) * 700))
+    })
+  }
 
-  const activeView = !hover || !hViews.length ? 0 : hViews.includes(hoverView) ? hoverView : hViews[0]
+  const activeView = hViews.includes(hoverView) ? hoverView : 0
 
   return (
     <article className={`nb-card overflow-hidden ${BG[index % BG.length]}`}>
       <div
-        className="relative aspect-[3/4] border-b-3 border-ink p-4"
-        onMouseEnter={() => { setHover(true); setHoverView(0) }}
-        onMouseLeave={() => setHover(false)}
+        className={`relative aspect-[3/4] border-b-3 border-ink p-4 ${hViews.length > 1 ? 'cursor-pointer' : ''}`}
+        onMouseEnter={() => {
+          if (hViews.length < 2) return
+          if (hoverTimer.current) clearTimeout(hoverTimer.current)
+          hoverTimer.current = window.setTimeout(runCycle, 180)
+        }}
+        onMouseLeave={() => { if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null } }}
+        onClick={() => { if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null }; runCycle() }}
+        role={hViews.length > 1 ? 'button' : undefined}
+        tabIndex={hViews.length > 1 ? 0 : undefined}
+        aria-label={hViews.length > 1 ? `Cycle ${product.name} views` : undefined}
+        onKeyDown={(e) => {
+          if (hViews.length < 2) return
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); runCycle() }
+        }}
       >
-        <span data-card-sticker className="nb-sticker absolute left-3 top-3 z-10">SAVE {off}%</span>
+        <span data-card-sticker className="nb-sticker absolute bottom-3 right-3 z-10">SAVE {off}%</span>
         <img data-card-img
           src={product.image}
           alt={product.name}
@@ -84,6 +100,13 @@ export default function ProductCard({ product, index }: Props) {
             className="absolute inset-4 h-[calc(100%-2rem)] w-[calc(100%-2rem)] object-contain transition-opacity duration-100"
             style={{ filter: 'drop-shadow(6px 6px 0 #0A0A0A)', opacity: activeView === 2 ? 1 : 0 }}
           />
+        )}
+        {hViews.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1.5" aria-hidden="true">
+            {hViews.map((v) => (
+              <span key={v} className={`h-2.5 w-2.5 border-2 border-ink ${activeView === v ? 'bg-pink' : 'bg-cream'}`} />
+            ))}
+          </div>
         )}
       </div>
 

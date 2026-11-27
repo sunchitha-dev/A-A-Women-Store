@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { useCart } from '../store/cart'
 import { products } from '../data/products'
+import Reveal from './Reveal'
 
 const WA = '917904733345'
 const priceMap = Object.fromEntries(products.map((p) => [p.id, p.price]))
@@ -68,7 +69,7 @@ export default function CartDrawer() {
         aria-label="Cart"
       >
         <div className="flex items-center justify-between border-b-3 border-ink px-4 py-4">
-          <h2 className="font-display text-2xl uppercase">Your Cart</h2>
+          <Reveal><h2 className="font-display text-2xl uppercase">Your Cart</h2></Reveal>
           <button type="button" className="nb-btn px-3 py-1 text-sm" onClick={closeDrawer} aria-label="Close cart">
             ✕
           </button>
@@ -76,7 +77,14 @@ export default function CartDrawer() {
 
         <div className="flex-1 overflow-y-auto p-4" data-lenis-prevent>
           {items.length === 0 ? (
-            <p className="font-mono text-sm uppercase">Cart is empty.</p>
+            <div className="flex h-full flex-col items-center justify-center text-center px-2">
+              <div className="nb-card bg-lilac p-4 mb-6 rotate-[-2deg]">
+                <img src="/about/bags.webp" alt="" aria-hidden="true" className="w-28 h-28 object-contain mx-auto" onError={(e) => { e.currentTarget.style.display = 'none' }} />
+              </div>
+              <p className="font-display text-3xl uppercase leading-tight">YOUR BAG<br />IS EMPTY</p>
+              <p className="mt-3 font-mono text-xs uppercase tracking-widest text-ink/70">Time to fill it with something cute.</p>
+              <Link to="/shop" className="nb-btn bg-gold mt-6" onClick={closeDrawer}>SHOP LOOKS</Link>
+            </div>
           ) : (
             <ul className="space-y-4">
               {items.map((i) => {
@@ -117,23 +125,25 @@ export default function CartDrawer() {
           )}
         </div>
 
-        <div className="border-t-3 border-ink p-4 space-y-3">
-          <div className="flex items-center justify-between font-mono text-sm uppercase">
-            <span>Subtotal</span>
-            <span className="font-bold">₹{subtotal}</span>
+        {items.length > 0 && (
+          <div className="border-t-3 border-ink p-4 space-y-3">
+            <div className="flex items-center justify-between font-mono text-sm uppercase">
+              <span>Subtotal</span>
+              <span className="font-bold">₹{subtotal}</span>
+            </div>
+            <Link to="/cart" className="nb-btn nb-btn-ink block text-center" onClick={closeDrawer}>
+              VIEW CART
+            </Link>
+            <a
+              href={`https://wa.me/${WA}?text=${waText}`}
+              target="_blank"
+              rel="noreferrer"
+              className="nb-btn block text-center"
+            >
+              ORDER ON WHATSAPP
+            </a>
           </div>
-          <Link to="/cart" className="nb-btn nb-btn-ink block text-center" onClick={closeDrawer}>
-            VIEW CART
-          </Link>
-          <a
-            href={`https://wa.me/${WA}?text=${waText}`}
-            target="_blank"
-            rel="noreferrer"
-            className="nb-btn block text-center"
-          >
-            ORDER ON WHATSAPP
-          </a>
-        </div>
+        )}
       </aside>
     </div>
   )

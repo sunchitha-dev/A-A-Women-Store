@@ -1,4 +1,4 @@
-const COLS = [2, 3, 4] as const
+const COLS = [1, 2, 3, 4] as const
 const CATS = ['all', 'kurti', 'jeans', 'party', 'y2k'] as const
 const SORTS = [
   { value: 'recommended', label: 'Recommended' },
@@ -24,15 +24,15 @@ export default function ShopToolbar({ cols, cat, sort, onCols, onCat, onSort }: 
     <div className="sticky top-0 z-30 border-b-3 border-ink bg-cream">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="hidden gap-2 md:flex" role="group" aria-label="Grid columns">
+          <div className="flex gap-2" role="group" aria-label="Grid columns">
             {COLS.map((n) => (
               <button
                 key={n}
                 type="button"
-                data-active={cols === n}
-                className="nb-chip size-10 p-0 font-mono text-sm focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-pink focus-visible:outline-offset-2"
+                data-active={cols === n || (n === 2 && cols > 2 && typeof window !== 'undefined' && window.innerWidth < 768)}
+                className={`nb-chip size-10 p-0 font-mono text-sm focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-pink focus-visible:outline-offset-2 ${n > 2 ? 'hidden md:inline-flex' : ''}`}
                 aria-label={`${n} columns`}
-                aria-pressed={cols === n}
+                aria-pressed={cols === n || (n === 2 && cols > 2 && typeof window !== 'undefined' && window.innerWidth < 768)}
                 onClick={() => onCols(n)}
               >
                 {n}

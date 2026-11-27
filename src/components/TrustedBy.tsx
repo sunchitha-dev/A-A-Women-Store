@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal'
+import SplitWords from './motion/SplitWords'
 import { trustBoxes } from '../data/trustConfig'
 
 const BG: Record<string, string> = {
@@ -17,11 +18,11 @@ export default function TrustedBy() {
     <section className="border-b-3 border-ink bg-cream px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-center gap-4">
-          <h2 className="font-display text-4xl uppercase md:text-6xl">TRUSTED BY CUSTOMERS</h2>
-          <span className="nb-sticker bg-gold" style={{ transform: 'rotate(-4deg)' }}>5.0 RATED</span>
+          <SplitWords as="h2" className="font-display text-4xl uppercase md:text-6xl">TRUSTED BY CUSTOMERS</SplitWords>
+          <Reveal><span className="nb-sticker bg-gold" style={{ transform: 'rotate(-4deg)' }}>5.0 RATED</span></Reveal>
         </div>
 
-        <Reveal className="mt-10 grid gap-6 md:grid-cols-4 md:items-start" stagger="> div">
+        <Reveal stagger="> div" className="mt-10 grid gap-6 md:grid-cols-4 md:items-start">
           {trustBoxes.map((box) => {
             const open = openKey === box.key
             const showCta = !box.link.startsWith('TODO')
@@ -40,7 +41,8 @@ export default function TrustedBy() {
             return (
               <div
                 key={box.key}
-                className={`nb-card min-h-[260px] md:min-h-[340px] p-0 transition-[transform,box-shadow] duration-500 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none ${BG[box.bg]} ${open ? '-translate-y-1 shadow-nb-lg' : ''}`}
+                className={`nb-card min-h-[260px] md:min-h-[340px] p-0 cursor-pointer transition-[transform,box-shadow] duration-200 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none ${BG[box.bg]} ${open ? '-translate-y-1 shadow-nb-lg' : ''}`}
+                onClick={() => setOpenKey(open ? null : box.key)}
                 onMouseLeave={() => setOpenKey((k) => (k === box.key ? null : k))}
                 onBlur={(e) => {
                   if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
@@ -52,7 +54,7 @@ export default function TrustedBy() {
                   type="button"
                   aria-expanded={open}
                   className="w-full p-5 text-left focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-pink focus-visible:outline-offset-[-3px]"
-                  onClick={() => setOpenKey(open ? null : box.key)}
+                  onClick={(e) => { e.stopPropagation(); setOpenKey(open ? null : box.key) }}
                   onMouseEnter={() => setOpenKey(box.key)}
                   onFocus={() => setOpenKey(box.key)}
                   onKeyDown={(e) => {
@@ -63,7 +65,7 @@ export default function TrustedBy() {
                     <p className="font-mono text-xs uppercase tracking-widest text-ink">{box.title}</p>
                     <span
                       aria-hidden="true"
-                      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border-3 border-ink font-mono text-lg leading-none transition-transform duration-500 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none ${open ? 'bg-ink text-cream' : 'bg-cream text-ink'}`}
+                      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border-3 border-ink font-mono text-lg leading-none transition-transform duration-200 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none ${open ? 'bg-ink text-cream' : 'bg-cream text-ink'}`}
                       style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)' }}
                     >
                       +
@@ -73,7 +75,7 @@ export default function TrustedBy() {
                   <p className="mt-3 font-mono text-xs uppercase text-ink">{box.small}</p>
 
                   <div
-                    className="grid transition-[grid-template-rows] duration-500 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none"
+                    className="grid transition-[grid-template-rows] duration-200 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none"
                     style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
                   >
                     <div className="overflow-hidden">
@@ -82,8 +84,9 @@ export default function TrustedBy() {
                   </div>
                 </button>
                 <div
-                  className="grid px-5 transition-[grid-template-rows] duration-500 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none"
+                  className="grid px-5 transition-[grid-template-rows] duration-200 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] motion-reduce:transition-none"
                   style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <div className="overflow-hidden">
                     <div className="pb-5">{cta}</div>

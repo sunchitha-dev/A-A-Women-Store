@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { aboutConfig } from '../../data/aboutConfig'
 import { getVisitStatus } from '../../lib/openNow'
+import Reveal from '../Reveal'
 import SplitWords from '../motion/SplitWords'
 
 function Img({ src, alt = '', className = '' }: { src: string; alt?: string; className?: string }) {
@@ -27,7 +28,7 @@ export default function VisitUs() {
         <SplitWords as="h2" className="font-display text-4xl uppercase text-ink md:text-6xl">Visit Us</SplitWords>
 
         <div className="mt-10 grid gap-8 md:grid-cols-2">
-          <div className="space-y-6">
+          <Reveal className="space-y-6" stagger=".nb-card" staggerEach={0.12}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
               <div className="nb-card relative flex-1 bg-white p-6">
                 <Img src="/about/pin.webp" alt="" className="absolute -top-5 right-6 w-10 motion-safe:animate-[bounce_2.4s_ease-in-out_infinite] motion-reduce:animate-none md:w-12" />
@@ -72,9 +73,9 @@ export default function VisitUs() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="relative">
+          <Reveal className="relative">
             <div className="border-[4px] border-ink bg-white shadow-[10px_10px_0_#0A0A0A] md:rotate-[1deg]">
               <div className="flex items-center gap-2 border-b-[4px] border-ink bg-cream px-3 py-2">
                 <span className="h-3 w-3 rounded-full border-2 border-ink bg-pink" />
@@ -90,7 +91,7 @@ export default function VisitUs() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

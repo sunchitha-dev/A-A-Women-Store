@@ -7,10 +7,12 @@ type Props = HTMLAttributes<HTMLElement> & {
   y?: number
   stagger?: string
   once?: boolean
+  duration?: number
+  staggerEach?: number
 }
 
-export default function Reveal({ as: Tag = 'div', delay, y, stagger, once, children, ...rest }: Props) {
+export default function Reveal({ as: Tag = 'div', delay, y, stagger, once, duration, staggerEach, children, ...rest }: Props) {
   const ref = useRef<HTMLElement>(null)
-  useReveal(ref, { delay, y, stagger, once })
+  useReveal(ref, { delay, y, stagger, once, duration, staggerEach })
   return <Tag ref={ref} {...rest}>{children}</Tag>
 }

@@ -14,7 +14,7 @@ type Props = {
   mode?: 'words' | 'chars'
 }
 
-export default function SplitWords({ as: Tag = 'h2', className = '', children, stagger = 0.06, start = 'top 85%', mode = 'words' }: Props) {
+export default function SplitWords({ as: Tag = 'h2', className = '', children, stagger = 0.09, start = 'top 92%', mode = 'words' }: Props) {
   const ref = useRef<HTMLElement>(null)
 
   useLayoutEffect(() => {
@@ -22,7 +22,7 @@ export default function SplitWords({ as: Tag = 'h2', className = '', children, s
     if (!el || prefersReducedMotion()) return
     const inners = Array.from(el.querySelectorAll<HTMLElement>('[data-split-inner]'))
     if (!inners.length) return
-    const s = window.matchMedia('(max-width: 767px)').matches ? Math.min(stagger, 0.04) : stagger
+    const s = window.matchMedia('(max-width: 767px)').matches ? Math.min(stagger, 0.06) : stagger
 
     const ctx = gsap.context(() => {
       gsap.set(inners, { yPercent: 110 })
@@ -38,8 +38,13 @@ export default function SplitWords({ as: Tag = 'h2', className = '', children, s
       }
       document.fonts.ready.then(run)
     }, el)
-
-    return () => ctx.revert()
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return
+      gsap.to(inners, { yPercent: 0, duration: DURATION, ease: EASE, stagger: s, overwrite: 'auto' })
+      io.disconnect()
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' })
+    io.observe(el)
+    return () => { io.disconnect(); ctx.revert() }
   }, [children, stagger, start, mode])
 
   if (prefersReducedMotion()) {

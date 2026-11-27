@@ -15,11 +15,13 @@ export function getLenis() {
 export function initLenis() {
   if (lenis) return lenis
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  ScrollTrigger.config({ ignoreMobileResize: true })
   lenis = new Lenis({
-    duration: 1.1,
-    easing: (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
+    duration: 1.2,
+    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
-    syncTouch: false,
+    syncTouch: true,
+    syncTouchLerp: 0.1,
   })
   lenis.on('scroll', ScrollTrigger.update)
   ticker = (time: number) => {

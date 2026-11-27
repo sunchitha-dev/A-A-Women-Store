@@ -48,21 +48,21 @@ export default function QuickAnswers() {
         <SplitWords as="h2" className="font-display text-4xl uppercase text-ink md:text-6xl">QUICK ANSWERS</SplitWords>
 
         <div className="mt-10 grid gap-10 md:grid-cols-[1fr_minmax(0,560px)] md:items-start">
-          <Reveal className="space-y-4" stagger=":scope > div">
+          <Reveal stagger=":scope > div" duration={1.4} staggerEach={0.25} className="space-y-4">
             {contactConfig.faqs.map((faq, i) => {
               const isOpen = open === i
               const shown = isOpen || hovered === i
               const id = `faq-${i}`
               const panel = `faq-panel-${i}`
               return (
-                <div key={faq.q} className="nb-card bg-white" onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
+                <div key={faq.q} className="nb-card bg-white cursor-pointer" onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)} onClick={() => toggle(i)}>
                   <button
                     id={id}
                     type="button"
                     className="flex w-full items-center justify-between gap-4 p-5 text-left focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[-3px] focus-visible:outline-pink"
                     aria-expanded={isOpen}
                     aria-controls={panel}
-                    onClick={() => toggle(i)}
+                    onClick={(e) => { e.stopPropagation(); toggle(i) }}
                   >
                     <span className="font-display text-lg uppercase text-ink md:text-xl">{faq.q}</span>
                     <span className={`shrink-0 font-mono text-2xl leading-none text-ink transition-transform duration-200 ${shown ? 'rotate-45' : ''}`} aria-hidden="true">+</span>
@@ -71,7 +71,7 @@ export default function QuickAnswers() {
                     id={panel}
                     role="region"
                     aria-labelledby={id}
-                    className={`grid transition-[grid-template-rows] duration-300 ease-out ${shown ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                    className={`grid transition-[grid-template-rows] duration-200 ease-out ${shown ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
                   >
                     <div className="overflow-hidden">
                       <div className="border-t-[3px] border-ink px-5 py-4 font-body text-base leading-relaxed text-ink">

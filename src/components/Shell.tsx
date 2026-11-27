@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navbar from './Navbar'
+import AnnouncementBar from './header/AnnouncementBar'
 import Footer from './Footer'
 import CartDrawer from './CartDrawer'
 import { destroyLenis, getLenis, initLenis, startLenis, stopLenis } from '../lib/lenis'
@@ -148,8 +149,9 @@ export default function Shell() {
     <div className="flex min-h-screen flex-col">
       {!reduced && <div ref={progressRef} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 box-content h-[4px] bg-pink border-b-[3px] border-ink origin-left pointer-events-none" style={{ transform: 'scaleX(0)' }} />}
       {!reduced && <div aria-hidden="true" className="fixed top-0 left-0 right-0 z-[41] border-b-[3px] border-ink pointer-events-none" />}
+      <AnnouncementBar />
       <Navbar />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <Outlet />
       </main>
       <Footer />
@@ -157,7 +159,7 @@ export default function Shell() {
       {!reduced && showTop && (
         <button
           type="button"
-          className="nb-btn fixed bottom-6 right-6 z-40 !px-0 !py-0 w-12 h-12 bg-pink"
+          className={`nb-btn fixed right-6 z-40 !px-0 !py-0 w-12 h-12 bg-pink ${pathname === '/cart' ? 'bottom-24 md:bottom-6' : 'bottom-6'}`}
           aria-label="Back to top"
           onClick={() => { const l = getLenis(); if (l) l.scrollTo(0, { duration: 1.6 }); else window.scrollTo({ top: 0, behavior: 'smooth' }) }}
         >

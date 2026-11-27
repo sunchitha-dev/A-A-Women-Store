@@ -4,6 +4,7 @@ import type { CartItem } from '../../store/cart'
 import { useCart } from '../../store/cart'
 import { aboutConfig } from '../../data/aboutConfig'
 import { products } from '../../data/products'
+import Reveal from '../Reveal'
 
 const WA = '917904733345'
 const ZIG = 'polygon(0 0,5% 8px,10% 0,15% 8px,20% 0,25% 8px,30% 0,35% 8px,40% 0,45% 8px,50% 0,55% 8px,60% 0,65% 8px,70% 0,75% 8px,80% 0,85% 8px,90% 0,95% 8px,100% 0,100% calc(100% - 8px),95% 100%,90% calc(100% - 8px),85% 100%,80% calc(100% - 8px),75% 100%,70% calc(100% - 8px),65% 100%,60% calc(100% - 8px),55% 100%,50% calc(100% - 8px),45% 100%,40% calc(100% - 8px),35% 100%,30% calc(100% - 8px),25% 100%,20% calc(100% - 8px),15% 100%,10% calc(100% - 8px),5% 100%,0 calc(100% - 8px))'
@@ -120,7 +121,7 @@ export default function Receipt({ items, subtotal }: Props) {
 
   return (
     <div className="space-y-6">
-      <div ref={wrapRef} className="relative bg-cream border-[3px] border-dashed border-ink font-mono text-sm text-ink p-5 pt-8 pb-8" style={{ clipPath: ZIG, transform: reduced ? undefined : 'rotate(1deg)' }}>
+      <div ref={wrapRef} className="relative bg-cream border-[3px] border-dashed border-ink font-mono text-sm text-ink p-5 pt-8 pb-8" style={{ clipPath: ZIG }}>
         <div ref={stampRef} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-[4px] border-pink px-4 py-2 font-display text-3xl uppercase text-pink" style={{ opacity: 0, transform: 'scale(2.2) rotate(-10deg)', background: 'rgba(255,246,224,0.9)' }} aria-hidden={!sent}>ORDER SENT</div>
         <p className="font-display text-lg uppercase text-center">A &amp; A WOMEN STORE</p>
         <p className="text-center text-xs uppercase">OLD PALLAVARAM, CHENNAI</p>
@@ -157,7 +158,7 @@ export default function Receipt({ items, subtotal }: Props) {
           </>
         )}
         <div><p className="mb-2 font-mono text-xs uppercase">Payment preference</p><div className="flex flex-wrap gap-2">{aboutConfig.payments.map((p) => <button key={p} type="button" data-active={pay === p} aria-pressed={pay === p} className="nb-chip font-mono text-[10px]" onClick={() => setPay(p)}>{p}</button>)}</div></div>
-        <label className="block"><span className="mb-1 block font-mono text-xs uppercase">Order note</span><textarea className="nb-input w-full min-h-24" value={note} onChange={(e) => setNote(e.target.value)} aria-label="Order note" /></label>
+        <label className="block"><Reveal as="span" className="mb-1 block font-mono text-xs uppercase">Order note</Reveal><textarea className="nb-input w-full min-h-24" value={note} onChange={(e) => setNote(e.target.value)} aria-label="Order note" /></label>
         <button type="submit" className="nb-btn nb-btn-pink w-full text-base">PLACE ORDER ON WHATSAPP</button>
         {sent && !cleared && <button type="button" className="nb-btn nb-btn-ink w-full" onClick={() => { clear(); setCleared(true) }}>CLEAR BAG</button>}
         <button type="button" className="w-full text-center font-mono text-xs uppercase underline underline-offset-2" onClick={tryFirst}>Want to try first? Tell the shop</button>

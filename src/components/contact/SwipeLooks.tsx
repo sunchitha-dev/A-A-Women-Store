@@ -244,11 +244,10 @@ export default function SwipeLooks() {
 
         {phase === 'stack' ? (
           <div className="mx-auto mt-10 max-w-[860px]">
-            <div className="flex items-center justify-center gap-3 md:gap-6">
-              <button type="button" onClick={doSkip} aria-label="Skip" className="hidden md:flex w-28 shrink-0 flex-col items-center gap-2 border-[3px] border-ink bg-cream px-3 py-5 shadow-[4px_4px_0_#0A0A0A] transition-transform transition-shadow duration-150 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_#0A0A0A] active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_#0A0A0A] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-pink">
-                <span className="font-display text-3xl text-ink">←</span>
-                <span className="font-display text-lg uppercase text-ink">SKIP</span>
-                <span className="font-mono text-[10px] uppercase text-ink">Drag left</span>
+            <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-6">
+              <button type="button" onClick={doSkip} aria-label="Skip" className="nb-btn nb-btn-ink flex shrink-0 flex-col items-center gap-1 !px-2 !py-3 text-[10px] sm:!px-3 sm:text-xs md:w-28 md:!px-3 md:!py-5 md:text-sm">
+                <span className="font-display text-xl md:text-3xl">←</span>
+                <span className="font-display uppercase">SKIP</span>
               </button>
 
               <div className="w-full max-w-[340px] md:max-w-[380px]">
@@ -262,25 +261,25 @@ export default function SwipeLooks() {
                   })}
                   {index >= LOOKS.length && <div className="nb-card flex h-full items-center justify-center bg-lilac"><p className="font-display text-2xl uppercase text-ink">All done</p></div>}
                 </div>
-                <div className="mt-3 flex justify-between font-mono text-[10px] uppercase text-ink md:hidden" aria-hidden="true">
-                  <span>← Skip</span><span>Love →</span>
-                </div>
               </div>
 
-              <button type="button" onClick={doLove} aria-label="Love" className="hidden md:flex w-28 shrink-0 flex-col items-center gap-2 border-[3px] border-ink bg-pink px-3 py-5 shadow-[4px_4px_0_#0A0A0A] transition-transform transition-shadow duration-150 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_#0A0A0A] active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_#0A0A0A] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-pink">
-                <span className="font-display text-3xl text-ink">→</span>
-                <span className="font-display text-lg uppercase text-ink">LOVE</span>
-                <span className="font-mono text-[10px] uppercase text-ink">Drag right</span>
+              <button type="button" onClick={doLove} aria-label="Love" className="nb-btn nb-btn-pink flex shrink-0 flex-col items-center gap-1 !px-2 !py-3 text-[10px] sm:!px-3 sm:text-xs md:w-28 md:!px-3 md:!py-5 md:text-sm">
+                <span className="font-display text-xl md:text-3xl">→</span>
+                <span className="font-display uppercase">LOVE</span>
               </button>
             </div>
 
 
-            <p className="mt-4 text-center font-mono text-sm text-ink">{String(Math.min(index + 1, LOOKS.length)).padStart(2, '0')} / {String(LOOKS.length).padStart(2, '0')}</p>
-            <div className="mt-2 flex justify-center gap-2" aria-hidden="true">
+            <p className="mt-4 hidden text-center font-mono text-sm text-ink md:block">{String(Math.min(index + 1, LOOKS.length)).padStart(2, '0')} / {String(LOOKS.length).padStart(2, '0')}</p>
+            <div className="mt-2 hidden justify-center gap-2 md:flex" aria-hidden="true">
               {LOOKS.map((_, i) => {
                 const c = loved.includes(i) ? 'bg-pink' : skipped.includes(i) ? 'bg-ink' : 'bg-cream'
                 return <span key={i} className={`h-3 w-3 border-2 border-ink ${c}`} />
               })}
+            </div>
+
+            <div className="mt-5 flex justify-center">
+              <button type="button" onClick={doBack} aria-label="Back" className="nb-btn bg-white !px-5 !py-3 text-sm">BACK</button>
             </div>
           </div>
         ) : (

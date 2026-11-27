@@ -88,7 +88,8 @@ export default function TailorProcess() {
               <article
                 key={c.n}
                 data-card={i}
-                className={`nb-card relative flex min-h-[360px] w-full shrink-0 flex-col justify-between p-6 md:min-h-[60vh] md:w-[72vw] md:max-w-[720px] ${c.bg}`}
+                className={`nb-card relative flex min-h-[360px] w-full shrink-0 flex-col justify-between p-6 pb-28 md:min-h-[60vh] md:w-[72vw] md:max-w-[720px] md:pb-6 ${c.bg}`}
+                style={{ opacity: pop ? 1 : 0, transform: `translateY(${pop ? 0 : 40}px)`, transition: reduced ? 'none' : 'opacity 0.7s ease, transform 0.7s ease' }}
               >
                 <div>
                   <p className="font-display text-[clamp(5rem,12vw,10rem)] leading-none text-ink">{c.n}</p>
@@ -99,7 +100,7 @@ export default function TailorProcess() {
                   src={c.prop}
                   alt=""
                   aria-hidden="true"
-                  className="absolute bottom-4 right-4 w-28 md:w-40"
+                  className="absolute bottom-4 right-4 w-24 md:w-40"
                   style={{
                     transform: `scale(${pop ? 1 : 0}) rotate(${tilt}deg)`,
                     transition: reduced ? 'none' : 'transform 500ms cubic-bezier(.2,1.4,.4,1)',

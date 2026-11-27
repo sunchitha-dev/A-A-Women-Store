@@ -100,17 +100,17 @@ export default function TailorTrust() {
           src="/tailor/pincushion.webp"
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -left-2 bottom-0 w-20 md:left-6 md:w-28"
+          className="pointer-events-none absolute -left-2 bottom-0 w-10 sm:w-20 md:left-6 md:w-28"
         />
         <img
           src="/tailor/scissors.webp"
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -right-2 top-0 w-20 rotate-12 md:right-6 md:w-28"
+          className="pointer-events-none absolute -right-2 top-0 w-10 rotate-12 sm:w-20 md:right-6 md:w-28"
         />
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center">
+        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-6 px-12 py-4 text-center sm:px-10 md:px-4">
           <Reveal>
-            <h2 className="font-display text-4xl uppercase text-gold md:text-6xl">READY TO GET FITTED?</h2>
+            <h2 className="font-display whitespace-nowrap [font-size:clamp(1.35rem,6vw,2.25rem)] uppercase text-gold sm:text-4xl md:text-6xl">READY TO GET FITTED?</h2>
           </Reveal>
           <button
             type="button"

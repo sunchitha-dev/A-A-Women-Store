@@ -96,6 +96,12 @@ export default function TailorHero() {
 
   useEffect(() => {
     if (reduced) return
+    const mobile = window.matchMedia('(max-width: 768px)').matches
+    if (mobile) {
+      const obj = { p: 0 }
+      const t = gsap.to(obj, { p: 1, duration: 1.6, ease: 'power2.out', onUpdate: () => setProgress(obj.p) })
+      return () => { t.kill() }
+    }
     let raf = 0
     const onScroll = () => {
       cancelAnimationFrame(raf)

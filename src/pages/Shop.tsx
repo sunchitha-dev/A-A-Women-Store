@@ -9,10 +9,12 @@ import SplitWords from '../components/motion/SplitWords'
 import Reveal from '../components/Reveal'
 import { getLenis } from '../lib/lenis'
 import { useScrollVelocity } from '../lib/motion'
+import ShopCTA from '../components/shop/ShopCTA'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const GRID: Record<number, string> = {
+  1: 'md:grid-cols-1',
   2: 'md:grid-cols-2',
   3: 'md:grid-cols-3',
   4: 'md:grid-cols-4',
@@ -20,7 +22,7 @@ const GRID: Record<number, string> = {
 
 function readCols(v: string | null) {
   const n = Number(v)
-  return n === 2 || n === 3 || n === 4 ? n : 3
+  return n === 1 || n === 2 || n === 3 || n === 4 ? n : 3
 }
 
 function readCat(v: string | null): Cat {
@@ -298,13 +300,14 @@ export default function Shop() {
             </div>
           </Reveal>
         ) : (
-          <div ref={gridRef} className={`grid grid-cols-2 gap-6 ${GRID[cols]}`}>
+          <div ref={gridRef} className={`grid gap-6 ${cols === 1 ? 'grid-cols-1' : 'grid-cols-2'} ${GRID[cols] ?? ''}`}>
             {displayed.map((p, i) => (
               <ProductCard key={p.id} product={p} index={i} />
             ))}
           </div>
         )}
       </div>
+      <ShopCTA />
     </div>
   )
 }

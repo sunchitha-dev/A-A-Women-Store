@@ -85,14 +85,14 @@ export default function FeaturedLooks() {
   const waText = encodeURIComponent(`Hi! I'd like to order ${current.name} (${current.code}) from A & A Women Store.`)
 
   return (
-    <section className="border-b-3 border-ink bg-cream px-4 py-16 sm:px-6">
+    <section className="border-b-3 border-ink bg-cream px-4 py-6 sm:px-6 md:py-16 flex min-h-[calc(100svh-4rem)] flex-col justify-center md:block md:min-h-0">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <p className="font-mono text-xs uppercase tracking-widest">Featured Looks</p>
         </Reveal>
-        <SplitWords as="h2" className="mt-2 font-display text-4xl uppercase md:text-5xl">Pick Your Look</SplitWords>
+        <SplitWords as="h2" className="mt-2 font-display text-3xl uppercase sm:text-4xl md:text-5xl">Pick Your Look</SplitWords>
 
-        <div className="mt-10 grid gap-10 md:grid-cols-2 md:items-start">
+        <div className="mt-5 grid gap-5 md:mt-10 md:gap-10 md:grid-cols-2 md:items-start">
           <div>
             <div className="border-4 border-ink bg-white shadow-[10px_10px_0_0_#0A0A0A]">
               <div className="flex items-center gap-2 border-b-4 border-ink bg-white px-3 py-2">
@@ -103,7 +103,7 @@ export default function FeaturedLooks() {
               </div>
 
               <div className="relative overflow-hidden bg-lilac">
-                <div className="relative mx-auto flex h-[420px] max-w-[90vw] items-end justify-center sm:h-[480px]">
+                <div className="relative mx-auto flex h-[30vh] min-h-[200px] max-h-[280px] max-w-[90vw] items-end justify-center sm:h-[480px] md:h-[420px] md:max-h-none">
                   <div className="absolute bottom-6 left-1/2 h-8 w-[68%] -translate-x-1/2 border-3 border-ink bg-gold shadow-[6px_6px_0_0_#0A0A0A]" style={{ borderRadius: '50%' }} />
                   <img
                     src={`/tryon/${displayed}.webp`}
@@ -120,13 +120,13 @@ export default function FeaturedLooks() {
               </div>
             </div>
 
-            <div className="mt-6">
-              <p className="font-display text-2xl uppercase">{current.name}</p>
+            <div className="mt-4 md:mt-6">
+              <p className="font-display text-xl uppercase md:text-2xl">{current.name}</p>
               <p className="mt-1 font-mono text-sm uppercase">{current.code}</p>
-              <p className="mt-2 font-mono text-xs uppercase">
+              <p className="mt-1 font-mono text-xs uppercase md:mt-2">
                 STYLE PREVIEW: fit and fabric may vary
               </p>
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-3 flex flex-wrap gap-2 md:mt-4 md:gap-3">
                 <button type="button" className="nb-btn bg-gold" onClick={() => add(current.id)}>
                   Add to Cart
                 </button>
@@ -157,7 +157,7 @@ export default function FeaturedLooks() {
                     onKeyDown={(e) => onKey(e, i)}
                     aria-label={`Select ${look.name} ${look.code}`}
                     aria-pressed={active}
-                    className={`nb-card p-0 text-left overflow-hidden max-md:w-44 max-md:shrink-0 max-md:snap-start focus:outline-none focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-pink focus-visible:outline-offset-2 ${
+                    className={`nb-card p-0 text-left overflow-hidden max-md:w-36 max-md:shrink-0 max-md:snap-start focus:outline-none focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-pink focus-visible:outline-offset-2 ${
                       active ? 'bg-pink shadow-[10px_10px_0_0_#0A0A0A]' : 'bg-white'
                     }`}
                   >
