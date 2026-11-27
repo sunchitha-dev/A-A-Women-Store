@@ -149,8 +149,10 @@ export default function Shell() {
     <div className="flex min-h-screen flex-col">
       {!reduced && <div ref={progressRef} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 box-content h-[4px] bg-pink border-b-[3px] border-ink origin-left pointer-events-none" style={{ transform: 'scaleX(0)' }} />}
       {!reduced && <div aria-hidden="true" className="fixed top-0 left-0 right-0 z-[41] border-b-[3px] border-ink pointer-events-none" />}
-      <AnnouncementBar />
-      <Navbar />
+      <div className="sticky top-0 z-50">
+        <AnnouncementBar />
+        <Navbar />
+      </div>
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>

@@ -95,12 +95,11 @@ export default function Navbar() {
 
   return (
     <>
-      <div aria-hidden="true" className="hidden lg:block" style={{ height: 'calc(var(--bar-height, 48px) + 80px)' }} />
       <header
         ref={headerRef}
         id="site-header"
         aria-label="Site header"
-        className="relative lg:fixed lg:left-0 lg:right-0 z-50 bg-cream text-ink border-b-[3px] border-ink lg:top-[var(--bar-height,48px)] h-[72px] lg:h-[80px]"
+        className="relative z-50 bg-cream text-ink border-b-[3px] border-ink h-[72px] lg:h-[80px]"
       >
         <div aria-hidden="true" className="pointer-events-none absolute left-0 right-0 top-full h-[6px] bg-ink" style={{ opacity: state1 ? 1 : 0, transition: 'opacity var(--dur-base) var(--ease-out)' }} />
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-[60] nb-btn bg-gold text-ink">Skip to main content</a>
