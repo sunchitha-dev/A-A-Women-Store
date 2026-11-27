@@ -28,12 +28,10 @@ export default function Navbar() {
   const [cartOpen, setCartOpen] = useState(false)
   const [megaOpen, setMegaOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [hidden, setHidden] = useState(false)
   const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const [badgeBump, setBadgeBump] = useState(false)
   const [prevLoc, setPrevLoc] = useState(pathname + search)
   const headerRef = useRef<HTMLElement>(null)
-  const lastY = useRef(0)
   const prevCount = useRef(count)
 
   useEffect(() => {
@@ -63,36 +61,10 @@ export default function Navbar() {
   }, [reduced])
 
   useEffect(() => {
-    if (reduced) return
-    lastY.current = window.scrollY
-    let raf = 0
-    const onScroll = () => {
-      cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY
-        const delta = y - lastY.current
-        if (Math.abs(delta) < 10) return
-        if (y > 180 && delta > 0) setHidden(true)
-        else if (delta < 0) setHidden(false)
-        lastY.current = y
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('scroll', onScroll) }
-  }, [reduced])
-
-  useEffect(() => {
     const el = headerRef.current
     if (!el) return
-    const apply = () => {
-      const desktop = window.matchMedia('(min-width: 1024px)').matches
-      if (reduced || !desktop) { gsap.set(el, { y: 0 }); return }
-      gsap.to(el, { y: hidden ? '-100%' : '0%', duration: hidden ? 0.48 : 0.24, ease: 'cubic-bezier(0.2,0,0,1)', overwrite: 'auto' })
-    }
-    apply()
-    window.addEventListener('resize', apply)
-    return () => window.removeEventListener('resize', apply)
-  }, [hidden, reduced])
+    gsap.set(el, { y: 0 })
+  }, [])
 
   useEffect(() => {
     if (mobileOpen) stopLenis(); else startLenis()
